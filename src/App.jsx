@@ -60,9 +60,16 @@ export default function App() {
     try {
       const res = await fetch(`${API_BASE}/api/player`);
       const data = await res.json();
+      console.log(data)
+
+      if (!Array.isArray(data)) {
+        throw new Error("Expected array but received: " + JSON.stringify(data));
+      }
+
       setPlayers(data);
     } catch (err) {
       appendLog("❌ Failed to load players: " + err.message, "error");
+      setPlayers([]); // fallback
     }
   };
 

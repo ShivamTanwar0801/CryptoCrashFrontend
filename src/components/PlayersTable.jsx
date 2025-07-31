@@ -1,5 +1,6 @@
-
 export default function PlayersTable({ players }) {
+  const isValidArray = Array.isArray(players);
+
   return (
     <div className="mt-8">
       <h2 className="text-lg font-bold text-[#00f7ff] mb-2">🧑‍💻 Players</h2>
@@ -12,7 +13,13 @@ export default function PlayersTable({ players }) {
             </tr>
           </thead>
           <tbody>
-            {players.length === 0 ? (
+            {!isValidArray ? (
+              <tr>
+                <td className="px-4 py-2 text-center text-red-400" colSpan="2">
+                  ❌ Failed to load players
+                </td>
+              </tr>
+            ) : players.length === 0 ? (
               <tr>
                 <td className="px-4 py-2 text-center" colSpan="2">
                   No players found.
