@@ -10,7 +10,7 @@ export default function App() {
   const [logs, setLogs] = useState([]);
   const [playerId, setPlayerId] = useState("");
   const [usdAmount, setUsdAmount] = useState("");
-  const [currency, setCurrency] = useState("usd");
+  const [currency, setCurrency] = useState("bitcoin"); // ✅ fixed default
   const [roundNumber, setRoundNumber] = useState(null);
   const [multiplier, setMultiplier] = useState(1);
   const [players, setPlayers] = useState([]);
@@ -42,9 +42,7 @@ export default function App() {
     );
     socket.on("bet_placed", (data) =>
       appendLog(
-        `🎯 Bet Placed: ${data.playerId} → ${
-          data.usdAmount
-        } USD in ${data.currency.toUpperCase()} (${data.cryptoAmount})`,
+        `🎯 Bet Placed: ${data.playerId} → $${data.usdAmount} USD in ${data.currency.toUpperCase()} (${data.cryptoAmount})`,
         "bet"
       )
     );
@@ -60,7 +58,6 @@ export default function App() {
     try {
       const res = await fetch(`${API_BASE}/api/player`);
       const data = await res.json();
-      console.log(data)
 
       if (!Array.isArray(data)) {
         throw new Error("Expected array but received: " + JSON.stringify(data));
@@ -76,6 +73,11 @@ export default function App() {
   const placeBet = async () => {
     if (!playerId || !usdAmount || !currency) {
       appendLog("⚠️ Missing bet input fields", "error");
+      return;
+    }
+
+    if (isNaN(usdAmount) || Number(usdAmount) <= 0) {
+      appendLog("⚠️ USD amount must be a positive number", "error");
       return;
     }
 
@@ -106,10 +108,7 @@ export default function App() {
 
   const cashOut = async () => {
     if (!playerId || !roundNumber || !currency) {
-      appendLog(
-        "⚠️ Missing data for cashout (playerId, roundNumber, or currency).",
-        "error"
-      );
+      appendLog("⚠️ Missing data for cashout (playerId, roundNumber, or currency).", "error");
       return;
     }
 
@@ -135,10 +134,7 @@ export default function App() {
       if (data.success) {
         fetchPlayers();
       } else {
-        appendLog(
-          "❌ Cashout failed: " + (data.message || "Unknown error"),
-          "error"
-        );
+        appendLog("❌ Cashout failed: " + (data.message || "Unknown error"), "error");
       }
 
       appendLog("💸 Cashout response: " + JSON.stringify(data), "cashout");
@@ -150,9 +146,9 @@ export default function App() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       fetchPlayers();
-    }, 300); // Wait for 300ms before firing
+    }, 300);
 
-    return () => clearTimeout(timeout); // Cleanup
+    return () => clearTimeout(timeout);
   }, []);
 
   return (
