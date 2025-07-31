@@ -1,4 +1,3 @@
-// src/components/PlayerForm.jsx
 
 export default function PlayerForm({ playerId, setPlayerId, usdAmount, setUsdAmount, currency, setCurrency, placeBet, cashOut }) {
   return (

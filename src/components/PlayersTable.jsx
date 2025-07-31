@@ -1,4 +1,4 @@
-// src/components/PlayersTable.jsx
+
 export default function PlayersTable({ players }) {
   return (
     <div className="mt-8">

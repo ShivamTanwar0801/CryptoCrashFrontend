@@ -15,8 +15,10 @@ export default function App() {
   const [multiplier, setMultiplier] = useState(1);
   const [players, setPlayers] = useState([]);
 
+  const API_BASE = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
   useEffect(() => {
-    socket = io("http://localhost:3000");
+    socket = io(API_BASE);
 
     socket.on("connect", () =>
       appendLog("✅ Connected to WebSocket", "connected")
@@ -54,7 +56,7 @@ export default function App() {
 
   const fetchPlayers = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/player");
+      const res = await fetch(`${API_BASE}/api/player`);
       const data = await res.json();
       setPlayers(data);
     } catch (err) {
@@ -69,7 +71,7 @@ export default function App() {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/bet", {
+      const res = await fetch(`${API_BASE}/api/bet`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -103,7 +105,7 @@ export default function App() {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/cashout", {
+      const res = await fetch(`${API_BASE}/api/cashout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
