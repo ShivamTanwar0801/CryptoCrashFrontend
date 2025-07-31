@@ -18,7 +18,9 @@ export default function App() {
   const API_BASE = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
   useEffect(() => {
-    socket = io(API_BASE);
+    socket = io(API_BASE, {
+      transports: ["websocket"],
+    });
 
     socket.on("connect", () =>
       appendLog("✅ Connected to WebSocket", "connected")
